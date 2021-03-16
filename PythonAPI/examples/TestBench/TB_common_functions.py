@@ -29,6 +29,38 @@ def calculateDistance(x1,y1,x2,y2):
 	dist = math.sqrt((x2 - x1)**2 + (y2 - y1)**2)
 	return dist
 
+def interpolate_path(path_tuple, increments_resolution):
+	
+	path_tuple_interpolated = []
+	
+	path_tuple_interpolated.append(path_tuple[0])
+	
+	for i in range(len(path_tuple)-1):
+		
+		diff = abs(np.subtract(path_tuple[i], path_tuple[i+1]))
+		dist = np.hypot(diff[0],diff[1])
+		
+		if dist > increments_resolution:
+
+			num_points_remainder = dist%increments_resolution
+			num_points = int(np.ceil((dist - num_points_remainder)/increments_resolution)) + 1
+			
+			if num_points_remainder > 0:
+				num_points = num_points + 1 
+				
+			x = np.linspace(path_tuple[i][0], path_tuple[i+1][0], num_points)
+			x = x[1:]
+			x = [round(num, 1) for num in x]
+
+			y = np.linspace(path_tuple[i][1], path_tuple[i+1][1], num_points)
+			y = y[1:]
+			y = [round(num, 1) for num in y]
+
+			interolated_points = list(zip(x, y))
+			path_tuple_interpolated = path_tuple_interpolated + interolated_points
+			# print(path_tuple_interpolated)
+			
+	return(path_tuple_interpolated)
 
 def AgentColourToRGB(agentColour):
 

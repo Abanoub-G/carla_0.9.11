@@ -11,13 +11,16 @@ from Agents.controller import long_lat_controller
 # from controller import long_lat_controller
 
 class vehicle():
-	def __init__(self):
+	def __init__(self,agentNo):
 		self.client = client
 		self.world  = world
 
 		self.blueprint_library = self.world.get_blueprint_library()
 		self.vehicle_blueprint = self.blueprint_library.filter("vehicle.mercedes-benz.coupe")[0]
 		self.vehicle_blueprint.set_attribute('color', AgentColourToRGB("yellow"))
+
+		self.agentNo = agentNo
+		self.agentTypeNo = 3
 
 		self.STOPPING_DISTANCE = 5
 		self.close_to_destination = False

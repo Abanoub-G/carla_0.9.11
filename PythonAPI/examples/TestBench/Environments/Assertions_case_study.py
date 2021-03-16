@@ -3,6 +3,7 @@ import numpy as np
 
 from Agents.pedestrian import pedestrian
 from Agents.vehicle import vehicle
+from TB_common_functions import log, calculateDistance
 # from Agents.traffic_light import traffic_light
 
 def interpolate_path(path_tuple, increments_resolution):
@@ -41,12 +42,21 @@ def interpolate_path(path_tuple, increments_resolution):
 	
 
 class Assertions_case_study():
-	def __init__(self):
-		self.veh1 = vehicle()
-		self.veh2 = vehicle()
-		self.veh3 = vehicle()
+	def __init__(self,world):
+		self.actors_list = []
+		self.veh1 = vehicle(1)
+		self.veh2 = vehicle(2)
+		self.veh3 = vehicle(3)
+		self.actors_list.append(self.veh1)
+		self.actors_list.append(self.veh2)
+		self.actors_list.append(self.veh3)
 		self.spawn_height = 8
 		self.tests_ended = False
+
+		self.world = world
+
+		logging_time_increment = 0.1
+		self.tests_logs = log(logging_time_increment) 
 
 	def set(self): 
 		# spawn(self,x,y,z,yaw):
@@ -59,9 +69,11 @@ class Assertions_case_study():
 		# interpolate path(s)
 		interpolation_resolution_min = 1
 		self.veh1_path_interpolated  = interpolate_path(self.veh1_path, interpolation_resolution_min)
+		self.veh2_path_interpolated  = interpolate_path(self.veh2_path, interpolation_resolution_min)
 		self.veh3_path_interpolated  = interpolate_path(self.veh3_path, interpolation_resolution_min)
 
 		self.veh1.set_path(self.veh1_path_interpolated)
+		self.veh2.set_path(self.veh3_path_interpolated)
 		self.veh3.set_path(self.veh3_path_interpolated)
 
 		self.veh1.spawn(self.veh1_path[0][0],self.veh1_path[0][1], self.spawn_height, -25)
@@ -75,7 +87,17 @@ class Assertions_case_study():
 
 	def step(self):
 		self.veh1.step() 
-		self.veh3.step() 
+		self.veh2.step() 
+		self.veh3.step()
+
+		self.veh2.stop = True
+
+
+
+		# Log 
+		t   = self.world.get_snapshot().timestamp.elapsed_seconds
+		fps = 1 / (self.world.get_snapshot().timestamp.frame_count)
+		self.tests_logs.append(0,0,self.actors_list,t,fps)
 
 		pass
 
@@ -83,4 +105,5 @@ class Assertions_case_study():
 		self.veh1.destroy()
 		self.veh2.destroy()
 		self.veh3.destroy()
+		self.tests_logs.write_file("AssertionCheckingCaseStudyLogs.txt")
 		pass

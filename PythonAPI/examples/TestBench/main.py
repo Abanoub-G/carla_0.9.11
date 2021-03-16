@@ -52,7 +52,7 @@ def main():
 		# env = PedNavTest()
 		# env = static_and_dyanmic_tests(world,"static")
 		# env.set_test(1)
-		env = Assertions_case_study()
+		env = Assertions_case_study(world)
 		# ===Set 
 		env.set()
 
