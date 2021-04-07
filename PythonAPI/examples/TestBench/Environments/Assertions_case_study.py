@@ -64,7 +64,9 @@ class Assertions_case_study():
 		# self.veh1_path = [[-6.44,-42.19],[-2.94,-61.59],[-6.44,-79.05]]
 		self.veh1_path = [(-368.2,209.8),(-342.6,197.1),(-334.4,197.1),(-317.9,189.1),(-314.5,183.3),(-280.1,166.3)]
 		self.veh2_path = [[-328.4,190.3]]
-		self.veh3_path = [(-242.3,151.6),(-365.6,212.7)]
+		self.veh3_path = [(-242.3,151.6),(-365.6,212.7)] # Safe Trajectory
+		# self.veh3_path = [(-258.6,159.4),(-365.6,212.7)] # Near miss Trajectory
+		# self.veh3_path = [(-279.0,169.4),(-365.6,212.7)] # Crash Trajectory
 
 		# interpolate path(s)
 		interpolation_resolution_min = 1
@@ -105,5 +107,7 @@ class Assertions_case_study():
 		self.veh1.destroy()
 		self.veh2.destroy()
 		self.veh3.destroy()
-		self.tests_logs.write_file("AssertionCheckingCaseStudyLogs.txt")
+		self.tests_logs.write_file("AssertionCheckingCaseStudyLogs_Safe.txt")
+		# self.tests_logs.write_file("AssertionCheckingCaseStudyLogs_NearMiss.txt")
+		# self.tests_logs.write_file("AssertionCheckingCaseStudyLogs_Crash.txt")
 		pass
