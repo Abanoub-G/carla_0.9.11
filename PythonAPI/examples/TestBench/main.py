@@ -54,7 +54,7 @@ def main():
 		# env.set_test(1)
 		env = Assertions_case_study(world)
 		# ===Set 
-		env.set()
+		# env.set()
 
 		
 #========================================================================================================		
@@ -73,16 +73,24 @@ def main():
 		
 
 		while True:
+			env.set()####
+			while True:
+				#===Tick
+				ts, frame = Ticking(world,frame)
+				# print("Ticking")
 
-			#===Tick
-			ts, frame = Ticking(world,frame)
-			# print("Ticking")
+				# ===Step 
+				env.step() 
+				
+				if env.test_ended == True:
+					env.destroy()
+					ts, frame = Ticking(world,frame)
+					break
 
-			# ===Step 
-			env.step() 
-			# if env.tests_ended == True:
-				# break
-			print("Tick")
+			if env.tests_ended == True:
+				break
+				
+				print("Tick")
 			
 
 
@@ -91,7 +99,7 @@ def main():
 
 		# env.end_tests()
 		# env.destroy_actors()
-		env.destroy()
+		# env.destroy()
 
 		settings.synchronous_mode = False
 		world.apply_settings(settings)
