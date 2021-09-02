@@ -8,6 +8,10 @@ import math
 import numpy as np
 import matplotlib.pyplot as plt
 
+def calculateDistance(x1,y1,x2,y2):
+	dist = math.sqrt((x2 - x1)**2 + (y2 - y1)**2)
+	return dist
+
 
 class pedestrian():
 	def __init__(self,agentNo,option):
@@ -30,6 +34,10 @@ class pedestrian():
 
 		self.stop  = False
 		self.agentNo = agentNo
+
+		self.index = int(0)
+		self.l_d_min           = 2    # Setting a minimum lookahead distance
+		self.stopping_distance = 2    #5
 		
 
 	def spawn(self,x,y,z,yaw):
@@ -61,18 +69,79 @@ class pedestrian():
 		self.dest_x = x 
 		self.dest_y = y 
 		self.dest_z = z 
-		
-	def step(self):
-		self.Update_state_info()
 
+	def set_path(self,path_coord_tuple):
+
+		self.path = path_coord_tuple  # [x,y]
+
+		print("Pedestrian path set!")
+
+
+	def find_lookahead_point(self):
+		# self.index = int(0)
+		l_end = 0 # distance to end of path
+		l_d   = 0 # look ahead distance
+
+
+		# calculate distance to end of path
+		l_end = calculateDistance(self.path[-1][0], self.path[-1][1], self.current_x, self.current_y)
+		# l_end = calculateDistance(self.path.x[-1], self.path.y[-1], self.current_x, self.current_y)
+
+		while True:
+
+			# check current pos is not too close to end 
+			if l_end < self.l_d_min:
+				self.index = -1
+				break
+				
+			# calc look ahead point
+			l_d = calculateDistance(self.path[self.index][0], self.path[self.index][1], self.current_x, self.current_y)
+			# l_d = calculateDistance(self.path.x[self.index], self.path.y[self.index], self.current_x, self.current_y)
+
+			if l_d >= self.l_d_min:
+				break
+
+			# check reached look ahead distance
+			if l_d >= self.l_d_min:
+				break
+
+			self.index += int(1)
+
+	def controller_step(self):
+		try:
+			# find the closest point in the path tuple
+			self.find_lookahead_point()
+			self.dest_x = self.path[self.index][0] 
+			self.dest_y = self.path[self.index][1]
+			self.dest_z = self.current_z
+
+			distance_from_destination = np.sqrt((self.path[-1][0] - self.current_x)**2 + (self.path[-1][1] - self.current_y)**2)
+
+			if distance_from_destination <= self.stopping_distance:
+				print("PEDESTRIAN ARRIVED!")
+				self.stop = True
+		except:
+			print("No path defined for pedestrian, agentNo = ",self.agentNo)
+			pass
+
+		# send command to go to location
 		if self.stop == True:
 			self.ped_controller.go_to_location(carla.Location(x=float(self.current_x), y=float(self.current_y), z=float(self.current_z)))
 		else:
 			self.ped_controller.go_to_location(carla.Location(x=float(self.dest_x), y=float(self.dest_y), z=float(self.dest_z)))
 		
+	def step(self):
+		self.Update_state_info()
+		self.ped_controller.set_max_speed(self.speed)
+		
+		self.controller_step()
+
+		# self.ped_controller.go_to_location(carla.Location(x=float(self.dest_x), y=float(self.dest_y), z=float(self.dest_z)))
+		
 
 	def set_speed(self,speed):
-		self.ped_controller.set_max_speed(speed)
+		self.speed = speed
+		
 
 	def Update_state_info(self):
 		self.world_snapshot = self.world.get_snapshot()

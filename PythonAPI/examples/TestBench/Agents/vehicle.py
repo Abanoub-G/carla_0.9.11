@@ -64,7 +64,7 @@ class vehicle():
 
 		self.path = path_coord_tuple  # [x,y]
 
-		print("Vehicle destination set!")
+		print("Vehicle path set!")
 
 	# def set_destination(self,x,y,z,occupancy_grid,map_x_coord,map_y_coord):
 	# 	# Note: if you want to the vehicle to use A* algorithim to path plan you need 

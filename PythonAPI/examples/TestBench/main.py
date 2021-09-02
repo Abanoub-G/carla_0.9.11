@@ -26,7 +26,10 @@ from TB_common_functions import Ticking
 # from Environments.AV_Testing import AV_Testing
 # from Environments.ConstraintRandom import ConstraintRandom
 from Environments.PedNavTest import PedNavTest
-from Environments.Assertions_case_study import Assertions_case_study
+from Environments.Assertions_case_study import Assertions_case_study_overtaking
+from Environments.Assertions_case_study import Assertions_case_study_left_turn_at_intersection
+from Environments.Assertions_case_study import Assertions_case_study_right_turn_at_intersection_pedestrian_crossing
+from Environments.GameRunTown3 import GameRun
 # from Environments.lboro_tests.lboro_tests_env import static_and_dyanmic_tests
 
 import __init__
@@ -52,7 +55,10 @@ def main():
 		# env = PedNavTest()
 		# env = static_and_dyanmic_tests(world,"static")
 		# env.set_test(1)
-		env = Assertions_case_study(world)
+		# env = Assertions_case_study_overtaking(world)
+		# env = Assertions_case_study_left_turn_at_intersection(world)
+		# env = Assertions_case_study_right_turn_at_intersection_pedestrian_crossing(world)
+		env = GameRun(world)
 		# ===Set 
 		# env.set()
 
